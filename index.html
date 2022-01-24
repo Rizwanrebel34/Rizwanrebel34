@@ -1,0 +1,82 @@
+<?php
+
+
+$connect = mysqli_connect("localhost", "root", "", "testing");
+
+$output = '';
+
+if(isset($_POST["query"]))
+{
+ $search = mysqli_real_escape_string($connect, $_POST["query"]);
+
+$query = "
+  SELECT * FROM tbl
+  WHERE serial LIKE '%".$search."%'
+  OR category LIKE '%".$search."%' 
+  OR book LIKE '%".$search."%' 
+  OR author LIKE '%".$search."%' 
+  OR price LIKE '%".$search."%'
+ ";
+
+}
+
+else
+{
+ $query = "
+  SELECT * FROM  tbl  ORDER BY serial
+ ";
+
+}
+$result = mysqli_query($connect, $query);
+
+if(mysqli_num_rows($result) > 0)
+
+{
+ $output .= '
+  <div class="table-responsive">
+   <table class="table table bordered">
+    
+<tr>
+     
+<th>serial</th>
+
+     <th>category</th>
+     
+<th>book</th>
+    
+ <th>author</th>
+   
+  <th>price</th>
+    </tr>
+ ';
+ 
+while($row = mysqli_fetch_array($result))
+ {
+  $output .= '
+   <tr>
+  
+  <td>'.$row["serial"].'</td>
+ 
+   <td>'.$row["category"].'</td>
+ 
+   <td>'.$row["book"].'</td>
+  
+  <td>'.$row["author"].'</td>
+   
+ <td>'.$row["price"].'</td>
+   </tr>
+  ';
+
+ }
+
+ echo $output;
+
+}
+else
+
+{
+ 
+echo 'Data Not Found';
+
+}
+?>
